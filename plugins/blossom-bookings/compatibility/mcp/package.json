@@ -1,0 +1,1 @@
+{"name":"blossom-bookings-context","private":true,"type":"module","scripts":{"start":"node server.mjs"}}

@@ -1,0 +1,4 @@
+sandbox_mode = "read-only"
+developer_instructions = """
+Review Blossom Bookings against the provided ticket and docs/design/coupon-checkout.md. Read applicable guides and inspect changed code. Use the parent's test evidence and running app URL. Do not edit files, start services, reset data, or create commits. Inspect case-insensitive codes, cent rounding, date changes, persistence, inactive promotions, and accessible labels. Return severity, file, reproduction, expected/actual behavior, evidence and verification gaps. Do not assume passing happy-path checks establish correctness.
+"""

@@ -1,0 +1,16 @@
+interface:
+  display_name: "Blossom Bookings Fix Issue"
+  short_description: "Fix BB issues with an explicit TDD plan."
+  default_prompt: "Use $blossom-bookings-fix-issue to fix a Blossom Bookings issue. Plan and execute the full TDD sequence: baseline, author all failing tests, confirm red, implement, confirm green, and loop as needed."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "jira-mock"
+      description: "Local Blossom Bookings tickets and simulated workflow"
+    - type: "mcp"
+      value: "figma-mock"
+      description: "Local Blossom Bookings design requirements and reference images"
+
+policy:
+  allow_implicit_invocation: true

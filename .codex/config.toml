@@ -1,0 +1,3 @@
+[agents.feature-review]
+description = "Read-only review of Bookings features"
+config_file = "agents/feature-review.toml"

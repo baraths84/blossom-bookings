@@ -1,0 +1,98 @@
+version = 1
+name = "Blossom Bookings app"
+
+[setup]
+script = "sh ./bin/workshop.sh app-setup"
+
+[setup.win32]
+script = "./bin/workshop.cmd app-setup"
+
+[[actions]]
+name = "Preview app"
+icon = "run"
+command = "sh ./bin/workshop.sh preview"
+platform = "darwin"
+
+[[actions]]
+name = "Preview app"
+icon = "run"
+command = "sh ./bin/workshop.sh preview"
+platform = "linux"
+
+[[actions]]
+name = "Preview app"
+icon = "run"
+command = "./bin/workshop.cmd preview"
+platform = "win32"
+
+[[actions]]
+name = "Quick checks"
+icon = "test"
+command = "sh ./bin/workshop.sh check:quick"
+platform = "darwin"
+
+[[actions]]
+name = "Quick checks"
+icon = "test"
+command = "sh ./bin/workshop.sh check:quick"
+platform = "linux"
+
+[[actions]]
+name = "Quick checks"
+icon = "test"
+command = "./bin/workshop.cmd check:quick"
+platform = "win32"
+
+[[actions]]
+name = "App tests"
+icon = "test"
+command = "sh ./bin/workshop.sh test"
+platform = "darwin"
+
+[[actions]]
+name = "App tests"
+icon = "test"
+command = "sh ./bin/workshop.sh test"
+platform = "linux"
+
+[[actions]]
+name = "App tests"
+icon = "test"
+command = "./bin/workshop.cmd test"
+platform = "win32"
+
+[[actions]]
+name = "Playwright"
+icon = "test"
+command = "sh ./bin/workshop.sh playwright"
+platform = "darwin"
+
+[[actions]]
+name = "Playwright"
+icon = "test"
+command = "sh ./bin/workshop.sh playwright"
+platform = "linux"
+
+[[actions]]
+name = "Playwright"
+icon = "test"
+command = "./bin/workshop.cmd playwright"
+platform = "win32"
+
+[[actions]]
+name = "Full CI"
+icon = "test"
+command = "sh ./bin/workshop.sh ci"
+platform = "darwin"
+
+[[actions]]
+name = "Full CI"
+icon = "test"
+command = "sh ./bin/workshop.sh ci"
+platform = "linux"
+
+[[actions]]
+name = "Full CI"
+icon = "test"
+command = "./bin/workshop.cmd ci"
+platform = "win32"

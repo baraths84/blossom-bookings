@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+./bin/mise trust mise.toml
+./bin/mise install --locked node
+exec ./bin/mise run setup

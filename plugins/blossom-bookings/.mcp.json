@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "jira-mock": {
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./tools/server.mjs",
+        "jira-mock"
+      ]
+    },
+    "figma-mock": {
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./tools/server.mjs",
+        "figma-mock"
+      ]
+    }
+  }
+}

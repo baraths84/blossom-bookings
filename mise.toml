@@ -1,0 +1,42 @@
+min_version = "2026.10.4"
+
+[tools]
+node = "24.21.0" # Includes npm 11.19.0.
+
+[settings]
+lockfile = true
+task.run_auto_install = false # bin/setup installs the pinned Node tool explicitly.
+
+[tasks.setup]
+description = "Install the locked app and browser-test dependencies"
+run = "npm ci --include=dev --no-audit --no-fund"
+
+[tasks.preview]
+alias = "dev"
+description = "Start a live preview of the app on this worktree's loopback port"
+run = "npm start"
+
+[tasks."check:quick"]
+description = "Lint the app and check browser test discovery"
+run = ["npm run lint", "./node_modules/.bin/playwright test --list"]
+
+[tasks.test]
+description = "Run the app and local plugin tests"
+run = ["npm test", "node --test plugins/blossom-bookings/test/plugin.test.mjs scripts/preview-identity.test.mjs"]
+
+[tasks.build]
+description = "Build the app for production"
+run = "npm run build"
+
+[tasks.playwright]
+alias = "test:e2e"
+description = "Build the app and smoke-test it in Chromium"
+depends = ["build"]
+run = [
+  "./node_modules/.bin/playwright install --only-shell chromium",
+  "./node_modules/.bin/playwright test",
+]
+
+[tasks.ci]
+description = "Run all app checks used by GitHub Actions"
+depends = ["check:quick", "test", "playwright"]

@@ -1,0 +1,27 @@
+{
+  "name": "blossom-bookings",
+  "version": "1.0.2",
+  "description": "Engineering workflow support for the Blossom Bookings project",
+  "author": {
+    "name": "Blossom Bookings team"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Blossom Bookings",
+    "shortDescription": "Support engineering workflows on the Blossom Bookings project.",
+    "longDescription": "Helps engineers working on Blossom Bookings gather project tickets, design context, acceptance criteria, and implementation guidance for workshop tasks.",
+    "developerName": "Blossom Bookings team",
+    "category": "Productivity",
+    "capabilities": [
+      "Engineering",
+      "Workflow"
+    ],
+    "composerIcon": "./assets/plumeria-favicon.png",
+    "logo": "./assets/plumeria-favicon.png",
+    "defaultPrompt": [
+      "Get the Blossom Bookings issue.",
+      "Fetch the Blossom Bookings design."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

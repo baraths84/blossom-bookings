@@ -1,0 +1,16 @@
+interface:
+  display_name: "Blossom Bookings Implement Feature"
+  short_description: "Implement features from tickets and design context."
+  default_prompt: "Use $blossom-bookings-implement-feature to implement a Blossom Bookings feature from ticket and design context."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "jira-mock"
+      description: "Local Blossom Bookings tickets and simulated workflow"
+    - type: "mcp"
+      value: "figma-mock"
+      description: "Local Blossom Bookings design requirements and reference images"
+
+policy:
+  allow_implicit_invocation: true

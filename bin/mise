@@ -1,0 +1,28 @@
+#!/bin/sh
+# Pinned project bootstrap. Does not change a globally installed mise.
+set -eu
+version=2026.10.4
+case "$(uname -s)-$(uname -m)" in
+  Darwin-arm64) platform=macos-arm64; checksum=5c530143fc750e8a98c9a36be8d361e5dd953fa0b004d58f7577783f7cf2ac24 ;;
+  Linux-x86_64) platform=linux-x64; checksum=2b8ce21f550872807bcaabf45b6bc5c64bfbd6dc3bf49dd4e67de700ef3ceb75 ;;
+  *) echo 'This bootstrap supports macOS arm64 and Linux x64. Install mise 2026.10.4 for your platform.' >&2; exit 1 ;;
+esac
+cache=${XDG_CACHE_HOME:-"$HOME/.cache"}/blossom-mise
+binary=$cache/$version-$platform/mise
+verify() {
+  if command -v sha256sum >/dev/null 2>&1; then actual=$(sha256sum "$1" | cut -d ' ' -f 1)
+  else actual=$(shasum -a 256 "$1" | cut -d ' ' -f 1); fi
+  test "$actual" = "$checksum"
+}
+if ! test -f "$binary" || ! verify "$binary"; then
+  mkdir -p "$(dirname "$binary")"
+  temporary=$(mktemp "$cache/download.XXXXXX")
+  trap 'rm -f "$temporary"' EXIT HUP INT TERM
+  curl --fail --location --silent --show-error "https://github.com/jdx/mise/releases/download/v$version/mise-v$version-$platform" -o "$temporary"
+  verify "$temporary" || { echo 'mise checksum mismatch' >&2; exit 1; }
+  chmod +x "$temporary"
+  mv "$temporary" "$binary"
+fi
+PATH="$(dirname "$binary"):$PATH"
+export PATH
+exec "$binary" "$@"
