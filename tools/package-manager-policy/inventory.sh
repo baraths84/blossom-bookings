@@ -35,7 +35,7 @@ for tool in npm pnpm yarn bun deno; do
     [[ "$seen" == *$'\n'"$executable"$'\n'* ]] && continue
     seen+="$executable"$'\n'
     found=1
-    marker=""
+    marker="  (inventory only)"
     probe_path=$PATH
     if [[ "$executable" == "$active" ]]; then
       marker="  <- active on PATH"
