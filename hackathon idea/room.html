@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PR 42 · AppSec review room</title>
+  <style>
+    :root{color-scheme:light;--ink:#192b27;--muted:#4d625b;--line:#cad4c9;--paper:#f6f7ef;--dark:#163b32;--green:#ccf293}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.48 Inter,"Segoe UI",sans-serif}
+    header{background:var(--dark);color:#f3f8ed;padding:16px max(5vw,20px);display:flex;align-items:center;justify-content:space-between}
+    header strong{font-size:1rem;letter-spacing:.01em} header small{color:#d2e6cd} main{max-width:1160px;margin:auto;padding:42px 28px 54px}
+    h1,h2,h3,p{margin:0} h1{font-size:clamp(2rem,5vw,3.65rem);line-height:1.07;letter-spacing:-.055em;max-width:750px;margin:8px 0 24px}
+    h2{font-size:1.25rem;letter-spacing:-.035em;margin-bottom:14px} h3{font-size:1rem;margin:15px 0 5px}
+    code,.meta,.kicker{font: .84rem/1.45 "IBM Plex Mono",Consolas,monospace;overflow-wrap:anywhere}.meta,.kicker,small{color:var(--muted)}
+    .kicker{letter-spacing:.035em} .status{background:var(--dark);color:white;border-radius:10px;padding:22px 26px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px}
+    .status h2{font-size:clamp(1.6rem,4vw,2.5rem);margin:2px 0;color:var(--green)} .status .kicker,.status code{color:#d1e3ce}
+    .status[data-state="Scan unavailable"] h2,.status[data-state="Expired"] h2{color:#ffd097}
+    .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,1fr);gap:18px;margin-top:18px}
+    article,aside{border:1px solid var(--line);border-radius:10px;background:#fffef9;padding:22px 24px;min-width:0}
+    .group + .group{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}
+    button{font:inherit;font-weight:600;color:var(--dark);background:#f8f9f2;border:1px solid #a6b6a9;border-radius:6px;text-align:left;padding:8px 12px;cursor:pointer}
+    button:hover:enabled{background:#e2ebdb}button.primary{background:var(--dark);border-color:var(--dark);color:white}button.primary:hover:enabled{background:#255143}
+    button:disabled{opacity:.48;cursor:default}:focus-visible{outline:3px solid #32815d;outline-offset:3px}
+    .buttons{display:flex;gap:8px;flex-wrap:wrap}.buttons button{font-size:.88rem}
+    a{color:#205847;text-decoration-thickness:1px;text-underline-offset:3px} .evidence{background:#edf2e6;border-left:3px solid #82a77b;margin:12px 0;padding:12px 14px;overflow-wrap:anywhere}
+    .links{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}.links a{font-size:.9rem}
+    #receipt,#prior{margin:12px 0 0;overflow-wrap:anywhere} #history{padding:0;margin:0;list-style:none} #history li{padding:10px 0;border-bottom:1px solid var(--line)} #history li:last-child{border:0}
+    #history li strong,#history li small{display:block}#history li strong{font-size:.87rem}#history li span{display:block;margin:3px 0}
+    #history-section{margin-top:18px}details summary{cursor:pointer;color:var(--muted);font-size:.9rem}details .buttons{margin-top:12px}
+    #error{color:#873b22;margin-top:10px} [hidden]{display:none!important} footer{color:var(--muted);font-size:.82rem;margin-top:14px}
+    @media(max-width:720px){main{padding:25px 16px}.layout{grid-template-columns:1fr}.status{grid-template-columns:1fr}article,aside,.status{padding:18px}.buttons button{min-height:42px}}
+  </style>
+</head>
+<body>
+  <header><strong>AppSec review room</strong><small>Offline rehearsal</small></header>
+  <main>
+    <p class="kicker">studio/notifications &nbsp; / &nbsp; PR #42</p>
+    <h1>Add notification delivery diagnostics</h1>
+    <section class="status" id="statusBox" aria-live="polite">
+      <div><p class="kicker">Finding disposition</p><h2 id="state">Loading review</h2><p id="detail"></p></div>
+      <code id="sha"></code>
+    </section>
+    <div class="layout">
+      <article>
+        <div class="group"><h2>Review evidence</h2><p id="empty">Run the review to load the finding and its source line.</p>
+          <div id="finding" hidden><p class="meta" id="scan"></p>
+            <div class="evidence"><strong id="rule"></strong><br><a id="source" target="_blank" rel="noopener"></a></div>
+            <h3>Developer assistant</h3><p id="developer"></p><h3>AppSec assistant</h3><p id="appsec"></p>
+          </div>
+        </div>
+        <div class="group"><h2>Decision record</h2><p id="decision"></p><p id="receipt" hidden></p><p id="prior" hidden></p>
+          <div class="links"><a href="/artifact/pr" target="_blank" rel="noopener">Open PR</a><a id="currentCommit" target="_blank" rel="noopener">Current commit</a><a id="oldCommit" target="_blank" rel="noopener" hidden>Earlier commit</a><a href="/artifact/jira" target="_blank" rel="noopener">Open Jira issue</a></div>
+        </div>
+      </article>
+      <aside><h2>Rehearsal controls</h2>
+        <div class="group"><h3>Developer in Slack</h3><div class="buttons">
+          <button class="primary" data-cue="review">Review PR 42</button><button data-cue="claim">Claim prior approval</button></div></div>
+        <div class="group"><h3>Reviewer in Jira</h3><div class="buttons"><button data-cue="approve">Submit reviewer approval</button></div></div>
+        <div class="group"><h3>Developer in GitHub</h3><div class="buttons"><button data-cue="push">Push next revision</button></div></div>
+        <div class="group"><details><summary>More rehearsal actions</summary><div class="buttons">
+          <button data-cue="wrong">Submit as developer</button><button data-cue="fail">Simulate scan outage</button>
+          <button data-cue="replay">Replay saved evidence</button><button data-cue="reset">Restart rehearsal</button></div></details></div>
+        <p id="error" role="alert"></p>
+      </aside>
+    </div>
+    <article id="history-section"><h2>Room activity</h2><p id="noEvents">Waiting for the first request.</p><ol id="history"></ol></article>
+    <footer>Rehearsal identities, commits and scan results are fictional. Live mode runs in your sandbox Slack channel.</footer>
+  </main>
+  <script>
+    const byId = (id) => document.getElementById(id);
+    let latest;
+    let busy = false;
+    function controls() {
+      for (const button of document.querySelectorAll("[data-cue]")) {
+        const cue = button.dataset.cue;
+        const requiresRequest = cue === "approve" || cue === "wrong";
+        button.disabled = busy || (requiresRequest && !latest?.request) || (cue === "push" && latest?.revision.sha.startsWith("a06d2135"));
+      }
+    }
+    function draw(snapshot) {
+      const r = snapshot.result;
+      latest = r;
+      byId("state").textContent = r.state;
+      byId("statusBox").dataset.state = r.state;
+      byId("detail").textContent = r.detail;
+      byId("sha").textContent = "commit " + r.revision.sha.slice(0, 12);
+      byId("currentCommit").href = r.revision.commit_url;
+      byId("oldCommit").hidden = !r.previous;
+      if (r.previous) byId("oldCommit").href = r.previous.commit_url;
+      byId("finding").hidden = !r.finding;
+      byId("empty").hidden = Boolean(r.finding);
+      byId("empty").textContent = r.state === "Scan unavailable" ? r.detail : "Run a review to load evidence for this revision.";
+      if (r.finding) {
+        byId("scan").textContent = r.evidence;
+        byId("rule").textContent = r.finding.rule;
+        byId("source").textContent = `${r.finding.path}:${r.finding.line}`;
+        byId("source").href = r.source_url;
+        byId("developer").textContent = r.notes.developer;
+        byId("appsec").textContent = r.notes.appsec;
+      }
+      byId("decision").textContent = r.request ? "Jira request " + r.request : "No request for this revision.";
+      byId("receipt").hidden = !r.receipt;
+      if (r.receipt) byId("receipt").textContent = `${r.receipt.reviewer} approved through ${r.receipt.expires} UTC. ${r.receipt.reason}`;
+      byId("prior").hidden = !r.previous;
+      if (r.previous) byId("prior").textContent = `Earlier receipt ${r.previous.request_id} covers commit ${r.previous.sha.slice(0, 12)}.`;
+      byId("noEvents").hidden = snapshot.events.length > 0;
+      byId("history").replaceChildren(...snapshot.events.slice().reverse().map((event) => {
+        const item = document.createElement("li");
+        for (const [tag, value] of [["strong", event.actor], ["span", event.message], ["small", event.state]]) {
+          const element = document.createElement(tag);
+          element.textContent = value;
+          item.append(element);
+        }
+        return item;
+      }));
+      controls();
+    }
+    async function update(cue) {
+      busy = true;
+      controls();
+      byId("error").textContent = "";
+      try {
+        const options = cue ? {method: "POST", headers: {"X-Rehearsal": "1"}, body: JSON.stringify({cue})} : {};
+        const response = await fetch(cue ? "/cue" : "/state", options);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Could not load the room.");
+        draw(data);
+      } catch (error) {
+        byId("error").textContent = error.message;
+      } finally {
+        busy = false;
+        controls();
+      }
+    }
+    document.querySelectorAll("[data-cue]").forEach((button) => button.addEventListener("click", () => update(button.dataset.cue)));
+    update();
+  </script>
+</body>
+</html>
