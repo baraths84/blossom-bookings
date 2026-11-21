@@ -21,7 +21,7 @@ Run the commands below from this folder.
 /bin/bash package-manager-reminder.sh --check "/path/to/representative/project"
 ```
 
-Inventory lists executable copies in `PATH` and common installation directories, including Deno. An inactive copy may be present for another project. Only npm, pnpm, Yarn, and Bun on the supplied `PATH` can trigger a reminder.
+Inventory lists executable copies in `PATH` and common installation directories, including Deno. For each manager, `active on PATH` marks the executable this environment selects. Other paths are marked `inventory only`. Cleanup is optional. An older installation may still support a project, and two paths may point to the same executable.
 
 Compare the home-directory check from device management with the check in a work project and the version printed in the developer's terminal. Corepack can select a different version from a project's pin. Direct a project-pin change to the repository owner. Record `version unknown` and `not on this PATH` separately in pilot reporting. The check's exit status indicates whether the script ran, and each output line gives the tool's status.
 
@@ -35,7 +35,9 @@ After validating the paths on a managed Mac, schedule this command daily in the 
 /bin/bash package-manager-reminder.sh --remind
 ```
 
-The reminder checks home-directory defaults and shows one dismissible dialog listing confirmed outdated tools. It records the last successful dialog under `~/Library/Application Support/Package Manager Reminder/` and waits 72 hours before showing another. A failed dialog can retry on the next run. Once the versions meet the minimums, the check finishes quietly.
+The reminder checks each of npm, pnpm, Yarn, and Bun using the first executable on the supplied `PATH` from the user's home directory. One dismissible dialog shows the version, required minimum, and selected executable path for each outdated tool. For example, with npm 11.10.0 selected and npm 9 installed elsewhere, npm stays out of the dialog. Switching to npm 9 makes it eligible for a reminder on the next check.
+
+The script records the last successful dialog under `~/Library/Application Support/Package Manager Reminder/` and waits 72 hours before showing another. A failed dialog can retry on the next run. Switching back to a supported version resolves the reminder for that tool.
 
 ## Regression checks
 

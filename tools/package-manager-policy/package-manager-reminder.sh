@@ -52,7 +52,7 @@ for index in "${!tools[@]}"; do
 
   if below_minimum "$version" "$minimum"; then
     status=outdated
-    outdated+=("$tool $version — requires $minimum or later")
+    outdated+=("$tool $version — requires $minimum or later"$'\n'"$executable")
   else
     status=meets-minimum
   fi
@@ -86,7 +86,7 @@ tool_list=$(printf '%s\n' "${outdated[@]}")
 if ! /usr/bin/osascript - "$tool_list" <<'APPLESCRIPT'
 on run argv
   set toolList to item 1 of argv
-  set messageText to "Please upgrade or switch to the required versions for the December 3, 2026 policy." & return & return & toolList
+  set messageText to "Please upgrade these active package managers or switch to a supported version by December 3, 2026." & return & return & toolList
   display dialog messageText with title "Package manager update" buttons {"OK"} default button "OK" giving up after 120
 end run
 APPLESCRIPT
