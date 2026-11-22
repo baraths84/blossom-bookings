@@ -1,0 +1,112 @@
+{
+  "name": "network-change-review",
+  "displayName": "Network Change Review",
+  "description": "Review changed fetch requests and see when a saved edit expands selected text to an entire document.",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baraths84/blossom-bookings.git",
+    "directory": "network-change-review"
+  },
+  "publisher": "local-preview",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "networkReview.review",
+        "title": "Review Network Changes",
+        "category": "Network Review",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "networkReview.explain",
+        "title": "Explain This Finding",
+        "category": "Network Review",
+        "icon": "$(sparkle)"
+      }
+    ],
+    "views": {
+      "scm": [
+        {
+          "id": "networkReview.results",
+          "name": "Network Changes"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "networkReview.results",
+      "contents": "Review fetch calls and changes to the editor data they can send.\n[Review Network Changes](command:networkReview.review)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "networkReview.review",
+          "when": "view == networkReview.results",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "networkReview.explain",
+          "when": "view == networkReview.results && viewItem == networkReview.finding",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "networkReview.explain",
+          "when": "false"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "vscode:prepublish": "npm run build",
+    "test": "npm run build && node --test test/analyzer.test.cjs test/exposure.test.cjs test/demo.test.mjs",
+    "test:host": "npm run build && node test/run-host.mjs",
+    "demo": "node demo/create.mjs",
+    "demo:exposure": "node demo/create.mjs --exposure",
+    "package": "vsce package --skip-license --baseImagesUrl https://raw.githubusercontent.com/baraths84/blossom-bookings/main/network-change-review/ --out dist/network-change-review-0.2.0.vsix"
+  },
+  "files": [
+    "dist/*.js",
+    "README.md",
+    "docs/network-changes.png",
+    "node_modules/typescript/package.json",
+    "node_modules/typescript/lib/typescript.js",
+    "node_modules/typescript/LICENSE.txt",
+    "node_modules/typescript/ThirdPartyNoticeText.txt"
+  ],
+  "dependencies": {
+    "typescript": "5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "1.95.0",
+    "@vscode/test-electron": "3.1.0",
+    "@vscode/vsce": "4.1.1"
+  }
+}

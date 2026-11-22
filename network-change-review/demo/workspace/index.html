@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="connect-src 'none'; object-src 'none'">
+  <title>Markdown diagram preview</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", system-ui, sans-serif; color: #172d32; background: #f7faf8; }
+    * { box-sizing: border-box; }
+    main { max-width: 62rem; margin: clamp(2rem, 7vw, 6rem) auto; padding: 0 1.3rem; }
+    h1 { font-family: Georgia, serif; font-weight: 500; font-size: clamp(2.2rem, 5vw, 3.5rem); margin: 0 0 2rem; }
+    article { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+    section { background: white; border: 1px solid #c7d4ce; padding: 1.25rem; border-radius: .7rem; }
+    label, h2 { display: block; font-size: .85rem; font-weight: 650; margin: 0 0 1rem; color: #355951; }
+    textarea { width: 100%; min-height: 13rem; resize: vertical; border: 1px solid #b7c6bf; border-radius: .35rem; padding: .8rem; font: .95rem/1.6 Consolas, monospace; }
+    textarea:focus-visible { outline: 3px solid #14664b; }
+    h3 { font-family: Georgia, serif; font-size: 1.75rem; font-weight: 500; margin: .8rem 0; }
+    p { white-space: pre-wrap; line-height: 1.55; }
+    ol { display: flex; flex-wrap: wrap; gap: .55rem; list-style: none; padding: 0; }
+    li { background: #e0f1e8; border: 1px solid #9bbcab; border-radius: .35rem; padding: .4rem .7rem; }
+    li + li::before { content: "→ "; color: #396c55; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Markdown diagram preview</h1>
+    <article>
+      <section><label for="markdown">Markdown source</label>
+        <textarea id="markdown" spellcheck="false"># Release checklist
+
+```flow
+Plan -> Build -> Review
+```</textarea>
+      </section>
+      <section aria-live="polite"><h2>Preview</h2><h3 id="heading"></h3><p id="body"></p><ol id="steps"></ol></section>
+    </article>
+  </main>
+  <script src="support.js"></script>
+  <script src="renderer.js"></script>
+  <script>
+    const input = document.getElementById("markdown");
+    async function update() {
+      const markdown = input.value;
+      const preview = await globalThis.renderMarkdown(markdown);
+      if (input.value !== markdown) return;
+      document.getElementById("heading").textContent = preview.heading;
+      document.getElementById("body").textContent = preview.body;
+      document.getElementById("steps").replaceChildren(...preview.steps.map(step => {
+        const item = document.createElement("li");
+        item.textContent = step;
+        return item;
+      }));
+    }
+    input.addEventListener("input", update);
+    update();
+  </script>
+</body>
+</html>
